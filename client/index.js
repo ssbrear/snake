@@ -13,3 +13,23 @@ function init() {
   $($(board).children()[randNum]).addClass("food");
 }
 init();
+const keyTranslate = {
+  37: "left",
+  38: "up",
+  39: "right",
+  40: "down",
+};
+let direction = "down";
+let started = false;
+$(document).keydown(function (e) {
+  const searchedKey = keyTranslate[e.keyCode];
+  if (started === false) started === true;
+  if (searchedKey == undefined || searchedKey === direction) return;
+  direction = searchedKey;
+  console.log(direction);
+});
+
+function gameloop() {}
+while (started) {
+  gameloop();
+}
