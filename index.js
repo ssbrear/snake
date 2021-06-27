@@ -66,7 +66,6 @@ function checkInvalidInput(input, direction) {
 }
 function gameLoop() {
   if (started === false) return;
-  if (ended === true) clearInterval(gameTick);
   newPositions[2] = oldPositions[1];
   newPositions[1] = oldPositions[0];
   if (direction === "left") {
@@ -81,6 +80,13 @@ function gameLoop() {
   console.log("old:", oldPositions);
   console.log("new:", newPositions);
   console.log(direction);
+  // Check if game over before updating. Exit loop early if that is the case
+  // Simplest way to check for a gameover is to loop through an array of all possible positions around the border
+  // Better way using game logic?
+  if (checkGameover()) {
+    ended = true;
+    return;
+  }
   updateDisplay();
   setTimeout(gameLoop, GAME_SPEED);
 }
@@ -98,4 +104,15 @@ function updateDisplay() {
     }
   }
   newPositions.forEach((position, i) => (oldPositions[i] = position));
+}
+function checkGameover() {
+  // Checks hitting left wall
+  if (oldPositions[0] % 21 === 0 && newPositions[0] % 21 === 20) return true;
+  // Checks hitting right wall
+  if (oldPositions[0] % 21 === 20 && newPositions[0] % 21 === 0) return true;
+  // Checks hitting top wall
+  if (oldPositions[0] <= 20 && newPositions[0] < 0) return true;
+  // Checks hitting bottom wall
+  if (oldPositions[0] > 280 && newPositions[0] > 314) return true;
+  return false;
 }
