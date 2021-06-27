@@ -1,6 +1,7 @@
 const board = $("#board");
 const GAME_SPEED = 250;
 let direction = "down";
+let extend = false;
 let started = false;
 let ended = false;
 const keyTranslate = {
@@ -36,7 +37,9 @@ function checkToStart() {
   }
 }
 checkToStart();
+let tick = false;
 $(document).keydown(function (e) {
+  if (tick === true) return;
   const searchedKey = keyTranslate[e.keyCode];
   if (started === false) started = true;
   // Check if the new input is invalid (two cases)
@@ -45,6 +48,7 @@ $(document).keydown(function (e) {
   if (checkInvalidInput(searchedKey, direction)) return;
   // Otherwise, update the new direction
   direction = searchedKey;
+  tick = true;
   console.log(direction);
 });
 
@@ -66,7 +70,13 @@ function checkInvalidInput(input, direction) {
 }
 function gameLoop() {
   if (started === false) return;
-  newPositions[2] = oldPositions[1];
+  for (let i = newPositions.length - 1; i > 0; i--) {
+    newPositions[i] = oldPositions[i - 1];
+  }
+  if (extend === true) {
+    newPositions.push(oldPositions[oldPositions.length - 1]);
+    extend = false;
+  }
   newPositions[1] = oldPositions[0];
   if (direction === "left") {
     newPositions[0] = oldPositions[0] - 1;
@@ -77,18 +87,18 @@ function gameLoop() {
   } else if (direction === "down") {
     newPositions[0] = oldPositions[0] + 21;
   }
-  console.log("old:", oldPositions);
-  console.log("new:", newPositions);
-  console.log(direction);
   // Check if game over before updating. Exit loop early if that is the case
   // Simplest way to check for a gameover is to loop through an array of all possible positions around the border
   // Better way using game logic?
+  // (Yes!)
   if (checkGameover()) {
     ended = true;
     return;
   }
   updateDisplay();
+  checkFoodEaten();
   setTimeout(gameLoop, GAME_SPEED);
+  tick = false;
 }
 function updateDisplay() {
   const tileArray = board.children();
@@ -104,6 +114,20 @@ function updateDisplay() {
     }
   }
   newPositions.forEach((position, i) => (oldPositions[i] = position));
+}
+function checkFoodEaten() {
+  const tileArray = board.children();
+  const newHead = $(tileArray[newPositions[0]]);
+  if (newHead.attr("class").includes("food")) {
+    // "Eat" the food
+    newHead.removeClass("food");
+    // Set a flag to delay tail next loop
+    extend = true;
+    // Spawn new food
+    const possibleSpawns = $(".tile:not(.snek)");
+    const randNum = Math.round(possibleSpawns.length * Math.random());
+    $(possibleSpawns[randNum]).addClass("food");
+  }
 }
 function checkGameover() {
   // Checks hitting left wall
