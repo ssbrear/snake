@@ -99,6 +99,9 @@ function gameLoop() {
   checkFoodEaten();
   setTimeout(gameLoop, GAME_SPEED);
   tick = false;
+  // Emergency in case food didn't spawn properly
+  // Happens sometimes for a reason I can't understand
+  if ($(".food").length === 0) spawnFood();
 }
 function updateDisplay() {
   const tileArray = board.children();
@@ -124,12 +127,11 @@ function checkFoodEaten() {
     // Set a flag to delay tail next loop
     extend = true;
     // Spawn new food
-    const possibleSpawns = $(".tile:not(.snek)");
-    const randNum = Math.round(possibleSpawns.length * Math.random());
-    $(possibleSpawns[randNum]).addClass("food");
+    spawnFood();
   }
 }
 function checkGameover() {
+  const tileArray = board.children();
   // Checks hitting left wall
   if (oldPositions[0] % 21 === 0 && newPositions[0] % 21 === 20) return true;
   // Checks hitting right wall
@@ -138,5 +140,12 @@ function checkGameover() {
   if (oldPositions[0] <= 20 && newPositions[0] < 0) return true;
   // Checks hitting bottom wall
   if (oldPositions[0] > 280 && newPositions[0] > 314) return true;
+  // Checks if hitting tail
+  if ($(tileArray[newPositions[0]]).attr("class").includes("snek")) return true;
   return false;
+}
+function spawnFood() {
+  const possibleSpawns = $(".tile:not(.snek)");
+  const randNum = Math.round(possibleSpawns.length * Math.random());
+  $(possibleSpawns[randNum]).addClass("food");
 }
