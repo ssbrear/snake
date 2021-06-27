@@ -24,24 +24,33 @@ header {
 
 #board {
   display: grid;
-  grid-template-columns: repeat(21, 36px);
+  grid-template-columns: repeat(21, 40px);
   background: #252525;
   padding: 4px;
   padding-right: 8px;
   .tile {
     width: 36px;
     height: 36px;
-    background: #373737;
+    background-color: #373737;
     border: 2px inset rgb(107, 107, 107);
-    transition: all 0.5s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
   }
   .snek {
-    background: var(--snake-green);
+    background-color: var(--snake-green);
   }
   .food {
     background: url("/assets/food.png") no-repeat center;
   }
   #head {
-    background: url("/assets/head.png") no-repeat center;
+    position: relative;
+    &:after {
+      content: "";
+      background: url("/assets/head.png") no-repeat center;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
   }
 }
