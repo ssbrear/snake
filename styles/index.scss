@@ -39,13 +39,13 @@ header {
     background-color: var(--snake-green);
   }
   .food {
-    background: url("/assets/food.png") no-repeat center;
+    background: url("../assets/food.png") no-repeat center;
   }
   #head {
     position: relative;
     &:after {
       content: "";
-      background: url("/assets/head.png") no-repeat center;
+      background: url("../assets/head.png") no-repeat center;
       position: absolute;
       top: 0;
       bottom: 0;
