@@ -31,8 +31,8 @@ header h2 {
 #board {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (36px)[21];
-      grid-template-columns: repeat(21, 36px);
+  -ms-grid-columns: (40px)[21];
+      grid-template-columns: repeat(21, 40px);
   background: #252525;
   padding: 4px;
   padding-right: 8px;
@@ -41,12 +41,14 @@ header h2 {
 #board .tile {
   width: 36px;
   height: 36px;
-  background: #373737;
+  background-color: #373737;
   border: 2px inset #6b6b6b;
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
 }
 
 #board .snek {
-  background: var(--snake-green);
+  background-color: var(--snake-green);
 }
 
 #board .food {
@@ -54,6 +56,16 @@ header h2 {
 }
 
 #board #head {
+  position: relative;
+}
+
+#board #head:after {
+  content: "";
   background: url("/assets/head.png") no-repeat center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 /*# sourceMappingURL=index.css.map */

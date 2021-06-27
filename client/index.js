@@ -122,8 +122,11 @@ function checkFoodEaten() {
   const tileArray = board.children();
   const newHead = $(tileArray[newPositions[0]]);
   if (newHead.attr("class").includes("food")) {
+    const score = $("#score");
     // "Eat" the food
     newHead.removeClass("food");
+    // Increase score
+    score.text(parseInt(score.text()) + 10);
     // Set a flag to delay tail next loop
     extend = true;
     // Spawn new food
